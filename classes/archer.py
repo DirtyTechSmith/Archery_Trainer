@@ -2,15 +2,16 @@ import math
 import tensorflow as tf
 import pygame
 import random
+from time import sleep
 from classes.position2d import Position2D
 
-MAX_BOW_STR = 100.0
+MAX_BOW_STR = 20.0
 
 
 class ArcherBrain(tf.keras.Model):
     def __init__(self):
         super().__init__()
-        self.dense1 = tf.keras.layers.Dense(5, activation=tf.nn.relu)
+        self.dense1 = tf.keras.layers.Dense(5, activation=tf.nn.sigmoid)
         self.dense2 = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
 
     def call(self, inputs):
@@ -28,7 +29,7 @@ class ArcherBrain(tf.keras.Model):
 
 
 class Archer(object):
-    def __init__(self, position, screen, screen_size, bow_str=100.0, brain=None):
+    def __init__(self, position, screen, screen_size, bow_str=MAX_BOW_STR, brain=None):
         """
 
         Args:
@@ -114,19 +115,40 @@ class Archer(object):
         Returns:
 
         """
+        gravity = Position2D([0.0, 9.8])
         enemy_position = Position2D(enemy_position)
         inputs = [self.position.x, self.position.y, enemy_position.x, enemy_position.y, self._bow_str]
         results = self.brain.call(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
-        arrow_speed = the_list[2] * self._bow_str
-        target_position = Position2D([the_list[0], the_list[1]])
-        print(target_position)
+        arrow_speed = (self._bow_str / 2.0) + (the_list[2] * (self._bow_str / 2.0))
+        arrow_speed *= arrow_speed
+        print(f'arrow speed: {arrow_speed}')
+        arrow_vector = Position2D([the_list[0], (0.0 - the_list[1])])
+        print(arrow_vector)
 
-        target_position = target_position.scalarMultiplication(arrow_speed)
-        print(target_position)
+        arrow_vector.scalarMultiplication(arrow_speed)
+
+        print(arrow_vector)
 
         import random
-        start_pos = self.position.position_list
-        end_pos = [random.randint(0, self.screen_size.x), random.randint(0, self.screen_size.y)]
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-        pygame.draw.line(self.screen, color, start_pos, end_pos)
+        start_pos = self.position
+        last_pos = self.position.copy()
+        counter = 0
+        while (arrow_vector.x <= self.screen_size.x):
+            print(f'arrow height: {arrow_vector.x}')
+            # sleep(.1)
+            new_pos = Position2D.sum(last_pos, arrow_vector)
+            if new_pos.x >= self.screen_size.x:
+                break
+
+            if new_pos.y >= self.screen_size.y:
+                break
+
+            pygame.draw.line(self.screen, color, last_pos.position_list, new_pos.position_list)
+            last_pos = new_pos.copy()
+            arrow_vector.increase(gravity)
+            # if counter > 10:
+            #     break
+            # counter += 1
+        # end_pos = Position2D.sum(start_pos, arrow_vector)

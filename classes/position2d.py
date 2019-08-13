@@ -93,8 +93,9 @@ class Position2D(object):
             other_pos (Position2D):
 
         """
-        self = self.sum(self, other_pos)
-        return
+        new_pos = self.sum(self, other_pos)
+        self.x = new_pos.x
+        self.y = new_pos.y
 
     def scalarMultiplication(self, scalar):
         """
