@@ -3,10 +3,13 @@ import sys, pygame
 pygame.init()
 draw = pygame.draw
 
-size = width, height = 1024, 768
+size = [1024, 768]
 speed = [1, 1]
 black = 0, 0, 0
 space_bar = pygame.K_SPACE
+keys = {
+    'space' :pygame.K_SPACE,
+}
 print('spacebar')
 print(space_bar)
 screen = pygame.display.set_mode(size)
@@ -14,11 +17,13 @@ screen = pygame.display.set_mode(size)
 # pygame_image = pygame.image.load(image_path)
 # image_rect = pygame_image.get_rect()
 
-my_cool_new_rect = pygame.rect()
+circle_color = pygame.color.Color('red')
+
+
 has_focus = 0
 last_pressed_keys = pygame.key.get_pressed()
 while 1:
-
+    screen.fill(black)
     focus = pygame.key.get_focused()
     if has_focus != focus:
         print(f'focused changed to: {focus}')
@@ -34,6 +39,6 @@ while 1:
         if pressed_keys[space_bar]:
             print('spacetime')
 
-    screen.fill(black)
-    # screen.blit(pygame_image, image_rect)
+    my_cool_new_circle = pygame.draw.circle(screen, circle_color, (100, 100), 100)
+    # screen.blit(my_cool_new_circle)
     pygame.display.flip()
