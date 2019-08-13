@@ -1,5 +1,6 @@
 import sys
 import pygame
+from classes.archer import Archer, ArcherBrain
 
 pygame.init()
 draw = pygame.draw
@@ -21,7 +22,7 @@ radius = 50
 good_guy_pos = [radius, size[1] - radius]
 bad_guy_pos = [size[0] - radius, size[1] - radius]
 while 1:
-
+    new_archer = Archer(good_guy_pos, screen, size)
     focus = pygame.key.get_focused()
     if has_focus != focus:
         print(f'focused changed to: {focus}')
@@ -35,6 +36,7 @@ while 1:
         # print('keys changed')
         last_pressed_keys = pressed_keys
         if pressed_keys[pygame.K_SPACE]:
+            new_archer.shoot(bad_guy_pos)
             print('spacetime')
 
     archer_circle = pygame.draw.circle(screen, archer_color, good_guy_pos, radius)
