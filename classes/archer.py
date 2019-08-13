@@ -1,5 +1,7 @@
+import math
 import tensorflow as tf
 import pygame
+from classes.position2d import Position2D
 
 MAX_BOW_STR = 100.0
 
@@ -36,7 +38,7 @@ class Archer(object):
         """
         self._bow_str = bow_str
         self._brain = brain
-        self._position = position
+        self._position = Position2D(position)
         self._screen_size = screen_size
 
     @property
@@ -44,7 +46,7 @@ class Archer(object):
         """
 
         Returns:
-            list[int]:
+            Position2D:
         """
         return self._position
 
@@ -64,7 +66,7 @@ class Archer(object):
         Returns:
             list[float]:
         """
-        relative_pos = [float(self.position[0] / self.screen_size[0]), float(self.position[1] / self.screen_size[1])]
+        relative_pos = [float(self.position.x / self.screen_size[0]), float(self.position.y / self.screen_size[1])]
 
     @property
     def brain(self):
