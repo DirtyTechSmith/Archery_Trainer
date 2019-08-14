@@ -5,7 +5,7 @@ import random
 from time import sleep
 from classes.position2d import Position2D
 
-MAX_BOW_STR = 20.0
+MAX_BOW_STR = 21.0
 
 
 class ArcherBrain(tf.keras.Model):
@@ -135,8 +135,8 @@ class Archer(object):
         start_pos = self.position
         last_pos = self.position.copy()
         counter = 0
-        while (arrow_vector.x <= self.screen_size.x):
-            print(f'arrow height: {arrow_vector.x}')
+        while (last_pos.y <= self.screen_size.y):
+            print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
             new_pos = Position2D.sum(last_pos, arrow_vector)
             if new_pos.x >= self.screen_size.x:
