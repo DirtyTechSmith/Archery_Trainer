@@ -12,8 +12,8 @@ class ArcherBrain(tf.keras.Model):
     def __init__(self):
         super().__init__()
         self.input_2d = tf.keras.layers.Dense(5, activation=tf.nn.sigmoid)
-        self.hidden_1 = tf.keras.layers.Dense(512, activation=tf.nn.relu)
-        self.hidden_2 = tf.keras.layers.Dense(512, activation=tf.nn.relu)
+        self.hidden_1 = tf.keras.layers.Dense(1024 , activation=tf.nn.relu)
+        self.hidden_2 = tf.keras.layers.Dense(1024, activation=tf.nn.relu)
         self.output_2d = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
     
     def call(self, inputs):
