@@ -12,7 +12,7 @@ class Bow(object):
             efficiency ():
         """
         self._draw_weight_lbs = draw_weight_lbs
-    
+
     @property
     def draw_weight_lbs(self):
         """
@@ -21,7 +21,7 @@ class Bow(object):
             float:
         """
         return self._draw_weight_lbs
-    
+
     @property
     def newton_force(self):
         """
@@ -29,4 +29,5 @@ class Bow(object):
         Returns:
             float:
         """
-        newtons = self.
+        newtons = self.draw_weight_lbs * lbs_to_newtons
+        return newtons
