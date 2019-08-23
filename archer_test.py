@@ -9,6 +9,7 @@ import sys
 import pygame
 from classes.archer import Archer, ArcherBrain, MAX_BOW_STR
 import random
+import numpy
 
 pygame.init()
 draw = pygame.draw

@@ -1,4 +1,5 @@
 import math
+import numpy
 
 
 class Position2D(object):
@@ -145,21 +146,44 @@ class Position2D(object):
             float:
         """
 
-        sum = (math.pow((position_1.x - position_2.x), 2)) + (math.pow((position_1.y - position_2.y), 2))
-        distance = math.sqrt(sum)
+        dist_sum = (math.pow((position_1.x - position_2.x), 2)) + (math.pow((position_1.y - position_2.y), 2))
+        distance = math.sqrt(dist_sum)
         return distance
 
     def __str__(self):
         new_str = f'{self.x}, {self.y}'
         return new_str
 
+    def __add__(self, other):
+        """
+
+        Args:
+            other (Position2D):
+
+        Returns:
+            Position2D:
+        """
+        new_pos = Position2D.sum(self, other)
+        return new_pos
+
+    def __iadd__(self, other):
+        """
+
+        Args:
+            other (Position2D):
+
+        Returns:
+            Position2D:
+        """
+        new_num = Position2D.sum(self, other)
+        self.position_list = new_num.position_list
 
 if __name__ == '__main__':
-    new_pos = Position2D([3, 2])
-    print(new_pos)
-    print(new_pos.length)
+    test_pos = Position2D([3, 2])
+    print(test_pos)
+    print(test_pos.length)
     pos_2 = Position2D([3, 7])
-    dist = Position2D.distance(new_pos, pos_2)
+    dist = Position2D.distance(test_pos, pos_2)
     print(dist)
     pos_2.scalarMultiplication(2.0)
     print(pos_2)

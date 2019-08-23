@@ -1,4 +1,5 @@
 from classes.position2d import Position2D
+import numpy
 
 GRAVITY = 9.8
 
@@ -10,20 +11,28 @@ kilograms_to_grains = 15432.358
 
 class Arrow(object):
 
-    def __init__(self, position=None, target_position=None, mass=.03, ):
+    def __init__(self, position=None, target_position=None, hit_zone_radius=1.0, mass=.03):
         """
         
         Args:
             position(Position2D):
+            target_position(Position2D):
+            hit_zone_radius(float): distance in meters away from the target we consider a hit.
             mass (float): mass in kg
         """
         if position is None:
             position = Position2D([0.0, 0.0])
 
+        if target_position is None:
+            target_position = Position2D([0.0, 0.0])
+
         self._mass = mass
         self._position = position
         self._target_position = target_position
-        self.velocity = 0.0  # type: float
+        self.hit_zone_radius = hit_zone_radius  # type:float
+        self._move_vector = Position2D([0, 0])
+        self.in_flight = False  # type: bool
+        self.hit_target = False  # type: bool
 
     @property
     def mass(self):
@@ -93,7 +102,8 @@ class Arrow(object):
         """
 
         Returns:
-            Position2d:
+            Position2D:
+
         """
         return self._position
 
@@ -114,7 +124,7 @@ class Arrow(object):
         """
 
         Returns:
-            Position2d:
+            Position2D:
         """
         return self._position
 
@@ -123,10 +133,62 @@ class Arrow(object):
         """
 
         Args:
-            target_pos (Position2D): 
+            target_pos (Position2D):
 
         """
         self._target_position = target_pos
+
+    @property
+    def move_vector(self):
+        """
+
+        Returns:
+            Position2d:
+        """
+        return self._move_vector
+
+    @move_vector.setter
+    def move_vector(self, vector_in):
+        """
+
+        Args:
+            vector_in (Position2D):
+
+
+        """
+        self._move_vector = vector_in
+
+    @ @property
+    def distance_to_target(self):
+        """
+        current distance from arrow to target
+
+        Returns:
+            float:
+        """
+
+        return Position2D.distance(self.position, self.target_position)
+
+    def fire(self, move_vector):
+        """
+
+        Args:
+            move_vector (Position2D):
+
+        Returns:
+
+        """
+        self.in_flight = True
+        self.move_vector = move_vector
+
+    def update(self):
+        if not self.in_flight:
+            return False
+
+        if self.hit_target:
+            return False
+
+        self.position
 
 
 if __name__ == '__main__':
