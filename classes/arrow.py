@@ -158,7 +158,7 @@ class Arrow(object):
         """
         self._move_vector = vector_in
 
-    @ @property
+    @property
     def distance_to_target(self):
         """
         current distance from arrow to target
