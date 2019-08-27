@@ -5,6 +5,7 @@ import random
 from time import sleep
 from vector import Vector
 from .bow import Bow
+from .entity import Entity
 
 MAX_BOW_STR = 60.0
 
@@ -33,7 +34,7 @@ class ArcherBrain(tf.keras.Model):
         return self.output_2d(x)
 
 
-class Archer(object):
+class Archer(Entity):
     def __init__(self, position, screen, screen_size, bow_str=MAX_BOW_STR, brain=None):
         """
 
@@ -44,23 +45,13 @@ class Archer(object):
             bow_str ():
             brain(ArcherBrain):
         """
+        super().__init__(position)
         self._bow_str = bow_str
         self._bow = Bow(arrow_velocity=self.bow_str)
         self._brain = brain
-        self._position = Vector(position)
         self.screen = screen
         self._screen_size = Vector(screen_size)
 
-    @property
-    def position(self):
-        """
-
-        Returns:
-            Vector:
-        """
-        return self._position
-
-    @property
     def bow_str(self):
         """
         arrow velocity in meters/s
@@ -143,14 +134,14 @@ class Archer(object):
         results = self.brain.call(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
         print(f'bow pullback: {the_list[2]}')
-        arrow_speed = (self._bow_str / 2.0) + (the_list[2] * (self._bow_str / 2.0))
+        arrow_speed = self.bow_str()
         # arrow_speed *= arrow_speed
         arrow_speed = arrow_speed * 3
         print(f'arrow speed: {arrow_speed}')
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
         print(arrow_vector)
 
-        arrow_vector.scalarMultiplication(arrow_speed)
+        arrow_vector*= arrow_speed
 
         print(arrow_vector)
 
@@ -159,19 +150,19 @@ class Archer(object):
         start_pos = self.position
         last_pos = self.position.copy()
         counter = 0
-        while (last_pos.y <= self.screen_size.y):
+        while last_pos.y <= self.screen_size.y:
             # print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
-            new_pos = Vector.sum(last_pos, arrow_vector)
+            new_pos = last_pos + arrow_vector
             if new_pos.x >= self.screen_size.x:
                 break
 
             if new_pos.y >= self.screen_size.y:
                 break
 
-            pygame.draw.line(self.screen, color, last_pos.position_list, new_pos.position_list)
+            pygame.draw.line(self.screen, color, last_pos.asList(), new_pos.asList())
             last_pos = new_pos.copy()
-            arrow_vector.increase(gravity)
+            arrow_vector += gravity
             # if counter > 10:
             #     break
             # counter += 1
