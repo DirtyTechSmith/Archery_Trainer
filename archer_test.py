@@ -33,7 +33,7 @@ bad_guy_pos = [size[0] - radius, size[1] - radius]
 my_bow = MAX_BOW_STR
 
 while 1:
-    my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
+    # my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
     new_archer = Archer(good_guy_pos, screen, size, bow_str=my_bow)
 
     focus = pygame.key.get_focused()

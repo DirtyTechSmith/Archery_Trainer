@@ -3,7 +3,7 @@ import tensorflow as tf
 import pygame
 import random
 from time import sleep
-from classes.position2d import Position2D
+from vector import Vector
 from .bow import Bow
 
 MAX_BOW_STR = 60.0
@@ -47,16 +47,16 @@ class Archer(object):
         self._bow_str = bow_str
         self._bow = Bow(arrow_velocity=self.bow_str)
         self._brain = brain
-        self._position = Position2D(position)
+        self._position = Vector(position)
         self.screen = screen
-        self._screen_size = Position2D(screen_size)
+        self._screen_size = Vector(screen_size)
 
     @property
     def position(self):
         """
 
         Returns:
-            Position2D:
+            Vector:
         """
         return self._position
 
@@ -79,7 +79,7 @@ class Archer(object):
         """
 
         Returns:
-            Position2D:
+            Vector:
         """
 
         return self._screen_size
@@ -130,14 +130,14 @@ class Archer(object):
         """
 
         Args:
-            enemy_position (Position2D or list[float]):
+            enemy_position (Vector or list[float]):
 
         Returns:
 
         """
-        gravity = Position2D([0.0, 9.8])
-        if not isinstance(enemy_position, Position2D):
-            enemy_position = Position2D(enemy_position)
+        gravity = Vector([0.0, 9.8])
+        if not isinstance(enemy_position, Vector):
+            enemy_position = Vector(enemy_position)
 
         inputs = [self.position.x, self.position.y, enemy_position.x, enemy_position.y, self._bow_str]
         results = self.brain.call(inputs)  # type: tf.Tensor
@@ -147,7 +147,7 @@ class Archer(object):
         # arrow_speed *= arrow_speed
         arrow_speed = arrow_speed * 3
         print(f'arrow speed: {arrow_speed}')
-        arrow_vector = Position2D([the_list[0], (0.0 - the_list[1])])
+        arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
         print(arrow_vector)
 
         arrow_vector.scalarMultiplication(arrow_speed)
@@ -162,7 +162,7 @@ class Archer(object):
         while (last_pos.y <= self.screen_size.y):
             # print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
-            new_pos = Position2D.sum(last_pos, arrow_vector)
+            new_pos = Vector.sum(last_pos, arrow_vector)
             if new_pos.x >= self.screen_size.x:
                 break
 
@@ -175,8 +175,8 @@ class Archer(object):
             # if counter > 10:
             #     break
             # counter += 1
-        # end_pos = Position2D.sum(start_pos, arrow_vector)
-        miss = Position2D.distance(last_pos, enemy_position)
+        # end_pos = Vector.sum(start_pos, arrow_vector)
+        miss = Vector.distance(last_pos, enemy_position)
         print(f'I missed by this much: {miss}')
         # reward =  missToRewardFn(miss)
         # self.Reward(reward)

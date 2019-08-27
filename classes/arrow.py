@@ -1,9 +1,9 @@
-from classes.position2d import Position2D
-import numpy
+from vector import Vector
+import numpy as np
 
 GRAVITY = 9.8
 
-gravity = Position2D([0.0, GRAVITY])
+gravity = Vector([0.0, GRAVITY])
 
 grain_to_kilograms = 0.00006479891
 kilograms_to_grains = 15432.358
@@ -15,22 +15,22 @@ class Arrow(object):
         """
         
         Args:
-            position(Position2D):
-            target_position(Position2D):
+            position(Vector):
+            target_position(Vector):
             hit_zone_radius(float): distance in meters away from the target we consider a hit.
             mass (float): mass in kg
         """
         if position is None:
-            position = Position2D([0.0, 0.0])
+            position = Vector([0.0, 0.0])
 
         if target_position is None:
-            target_position = Position2D([0.0, 0.0])
+            target_position = Vector([0.0, 0.0])
 
         self._mass = mass
         self._position = position
         self._target_position = target_position
         self.hit_zone_radius = hit_zone_radius  # type:float
-        self._move_vector = Position2D([0, 0])
+        self._move_vector = Vector([0, 0])
         self.in_flight = False  # type: bool
         self.hit_target = False  # type: bool
 
@@ -102,7 +102,7 @@ class Arrow(object):
         """
 
         Returns:
-            Position2D:
+            Vector:
 
         """
         return self._position
@@ -112,7 +112,7 @@ class Arrow(object):
         """
 
         Args:
-            value (Position2D):
+            value (Vector):
 
         Returns:
 
@@ -124,7 +124,7 @@ class Arrow(object):
         """
 
         Returns:
-            Position2D:
+            Vector:
         """
         return self._position
 
@@ -133,7 +133,7 @@ class Arrow(object):
         """
 
         Args:
-            target_pos (Position2D):
+            target_pos (Vector):
 
         """
         self._target_position = target_pos
@@ -143,7 +143,7 @@ class Arrow(object):
         """
 
         Returns:
-            Position2d:
+            Vector:
         """
         return self._move_vector
 
@@ -152,7 +152,7 @@ class Arrow(object):
         """
 
         Args:
-            vector_in (Position2D):
+            vector_in (Vector):
 
 
         """
@@ -167,13 +167,13 @@ class Arrow(object):
             float:
         """
 
-        return Position2D.distance(self.position, self.target_position)
+        return Vector.distance(self.position, self.target_position)
 
     def fire(self, move_vector):
         """
 
         Args:
-            move_vector (Position2D):
+            move_vector (Vector):
 
         Returns:
 
@@ -192,6 +192,6 @@ class Arrow(object):
 
 
 if __name__ == '__main__':
-    new_arrow = Arrow(Position2D([0.0, 0.0]))
+    new_arrow = Arrow(Vector([0.0, 0.0]))
     new_arrow.grains = 300
     print(f'grains: {new_arrow.grains}, grams: {new_arrow.mass_grams}, kg : {new_arrow.mass}')

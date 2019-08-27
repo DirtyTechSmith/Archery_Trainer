@@ -1,5 +1,5 @@
 from .arrow import Arrow
-from classes.position2d import Position2D
+from vector import Vector
 import numpy
 
 LBS_TO_NEWTONS = 4.4482216282509
@@ -105,9 +105,9 @@ class Bow(object):
         """
 
         Args:
-            vector (Position2D):
+            vector (Vector):
             pull_percent (float):
-            target_position(Position2D):
+            target_position(Vector):
 
         Returns:
             Arrow:
