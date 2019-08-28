@@ -7,7 +7,7 @@ from vector import Vector
 from .bow import Bow
 from .entity import Entity
 
-MAX_BOW_STR = 60.0
+MAX_BOW_STR = 90.0
 
 
 class ArcherBrain(tf.keras.Model):
