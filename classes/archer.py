@@ -11,6 +11,9 @@ MAX_BOW_STR = 60.0
 
 
 class ArcherBrain(tf.keras.Model):
+    def compute_output_signature(self, input_signature):
+        pass
+
     def __init__(self):
         super().__init__()
         self.input_2d = tf.keras.layers.Dense(5, activation=tf.nn.sigmoid)
@@ -18,7 +21,7 @@ class ArcherBrain(tf.keras.Model):
         self.hidden_2 = tf.keras.layers.Dense(1024, activation=tf.nn.relu)
         self.output_2d = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
 
-    def call(self, inputs):
+    def calculateTrajectory(self, inputs):
         """
 
         Args:
@@ -131,7 +134,7 @@ class Archer(Entity):
             enemy_position = Vector(enemy_position)
 
         inputs = [self.position.x, self.position.y, enemy_position.x, enemy_position.y, self._bow_str]
-        results = self.brain.call(inputs)  # type: tf.Tensor
+        results = self.brain.calculateTrajectory(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
         print(f'bow pullback: {the_list[2]}')
         arrow_speed = self.bow_str()
@@ -141,7 +144,7 @@ class Archer(Entity):
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
         print(arrow_vector)
 
-        arrow_vector*= arrow_speed
+        arrow_vector *= arrow_speed
 
         print(arrow_vector)
 
