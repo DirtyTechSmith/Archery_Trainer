@@ -1,23 +1,36 @@
 from .archer import Archer
+from .entity import Entity
+from pygame import Surface
+from vector import Vector
 
 
 class ArcherPopulation(object):
-    def __init__(self, screen, num_archers=500):
+    def __init__(self, screen, archer_pos, target, num_archers=500, ):
+        """
+
+        Args:
+            screen (Surface):
+            archer_pos(Vector):
+            num_archers (int):
+            target (Entity):
+        """
         self._screen = screen
         self.archer_count = num_archers
-        self._the_archers = None
+        self._archers = None
+        self.target = target
+        self.archer_position = archer_pos
 
     @property
-    def the_archers(self):
+    def archers(self):
         """
 
         Returns:
             dict[int,Archer]:
         """
-        if self._the_archers is None:
-            self._the_archers = self.makeArchers(num_archers=self.archer_count)
+        if self._archers is None:
+            self._archers = self.makeArchers(num_archers=self.archer_count)
 
-        return self._the_archers
+        return self._archers
 
     def makeArchers(self, num_archers=None):
         """
@@ -33,6 +46,15 @@ class ArcherPopulation(object):
 
         archer_dict = {}
         for x in range(num_archers):
-            archer_dict[x] = Archer()
+            archer_dict[x] = Archer(self.archer_position, self._screen, self.target)
 
         return archer_dict
+
+    def volley(self):
+        for archer_number, archer in self.archers.items():
+            archer.volley()
+
+    def volleyThreaded(self):
+        for archer_number, archer in self.archers.items():
+            archer.volley_Threaded()
+            archer.waitForFire()
