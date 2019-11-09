@@ -46,7 +46,7 @@ class ArcherPopulation(object):
 
         archer_dict = {}
         for x in range(num_archers):
-            archer_dict[x] = Archer(self.archer_position, self._screen, self.target)
+            archer_dict[x] = Archer(self.archer_position.copy(), self._screen, self.target)
 
         return archer_dict
 
@@ -58,3 +58,11 @@ class ArcherPopulation(object):
         for archer_number, archer in self.archers.items():
             archer.volley_Threaded()
             archer.waitForFire()
+
+    def breedPopulation(self):
+        the_misses = [archer.miss for archer in self.archers.values()]
+        biggest_miss = max(the_misses)
+        closest_hit = min(the_misses)
+        print(f'biggest miss: {biggest_miss}, closest hit: {closest_hit}')
+        for archer in self.archers.values():
+            pass

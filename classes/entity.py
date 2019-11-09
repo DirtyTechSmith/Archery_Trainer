@@ -8,11 +8,9 @@ class Entity(object):
         """
 
         Args:
-            position (Vector or Iterable[float]):
+            position (Vector):
             screen(Surface):
         """
-        if isinstance(position, Iterable):
-            position = Vector(position)
 
         self._position = position
         self.screen = screen

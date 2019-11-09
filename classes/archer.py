@@ -5,12 +5,12 @@ from pygame import Surface
 import random
 from time import sleep
 from vector import Vector
-from .bow import Bow
-from .entity import Entity
+from classes.bow import Bow
+from classes.entity import Entity
 from threading import Thread
 from collections import Iterable
 
-MAX_BOW_STR = 90.0
+MAX_BOW_STR = 300.0
 
 
 class ArcherBrain(tf.keras.Model):
@@ -20,8 +20,8 @@ class ArcherBrain(tf.keras.Model):
     def __init__(self):
         super().__init__()
         self.input_2d = tf.keras.layers.Dense(5, activation=tf.nn.sigmoid)
-        self.hidden_1 = tf.keras.layers.Dense(1024, activation=tf.nn.relu)
-        self.hidden_2 = tf.keras.layers.Dense(1024, activation=tf.nn.relu)
+        self.hidden_1 = tf.keras.layers.Dense(32, activation=tf.nn.relu)
+        self.hidden_2 = tf.keras.layers.Dense(32, activation=tf.nn.relu)
         self.output_2d = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
 
     def calculateTrajectory(self, inputs):
@@ -52,8 +52,6 @@ class Archer(Entity, Thread):
             arrow_count(int):
             brain(ArcherBrain):
         """
-        if isinstance(position, Iterable):
-            position = Vector(position)
 
         Thread.__init__(self)
         super().__init__(position, screen)
@@ -63,6 +61,8 @@ class Archer(Entity, Thread):
         self._target = target
         self.arrow_count = arrow_count
         self.arrows_fired = []
+        self.miss = float('inf')
+        self.fitness = 0
 
     @property
     def bow_str(self):
@@ -94,7 +94,7 @@ class Archer(Entity, Thread):
         Returns:
             list[float]:
         """
-        relative_pos = [float(self.position.x / self.screen_size.x), float(self.position.y / self.screen_size.y)]
+        relative_pos = [float(self.position.x / self.screen.get_width()), float(self.position.y / self.screen.get_height())]
         return relative_pos
 
     @property
@@ -118,6 +118,9 @@ class Archer(Entity, Thread):
         """
         the_brain = ArcherBrain()
         return the_brain
+
+    def resetMiss(self):
+        self.miss = float('inf')
 
     def calculate_relative_pos(self, pos):
         """
@@ -143,17 +146,17 @@ class Archer(Entity, Thread):
         enemy_position = enemy.position
 
         gravity = Vector([0.0, 9.8])
-        print(self.position)
-        inputs = [self.position.x, self.position.y, enemy_position.x, enemy_position.y, self.bow_str]
+
+        inputs = [self.position.x, self.position.y, self.target.position.x, self.target.position.y, self.bow_str]
         # print(inputs)
         results = self.brain.calculateTrajectory(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
         # print(f'bow pullback: {the_list[2]}')
-        arrow_speed = self.bow_str
-        # arrow_speed *= arrow_speed
-        arrow_speed = arrow_speed * 3
-        # print(f'arrow speed: {arrow_speed}')
+        bow_pullback = the_list[2]
+        arrow_speed = self.bow_str * bow_pullback
+
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
+        arrow_vector.normalize()
         # print(arrow_vector)
 
         arrow_vector *= arrow_speed
@@ -163,19 +166,23 @@ class Archer(Entity, Thread):
         import random
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         start_pos = self.position
+        # print(f'self.postion:{self.position}')
         last_pos = self.position.copy()
         counter = 0
-        while last_pos.y <= self.screen_size.y:
+        # print(f'last pos:{last_pos}')
+
+        while last_pos.y <= self.screen.get_height():
+
             # print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
             new_pos = last_pos + arrow_vector
-            if new_pos.x >= self.screen_size.x:
+            if new_pos.x >= self.screen.get_width():
                 break
 
-            if new_pos.y >= self.screen_size.y:
+            if new_pos.y >= self.screen.get_height():
                 break
 
-            pygame.draw.line(self.screen, color, last_pos.asList(), new_pos.asList())
+            pygame.draw.line(self.screen, color, last_pos.float_list, new_pos.float_list)
             last_pos = new_pos.copy()
             arrow_vector += gravity
             # if counter > 10:
@@ -186,6 +193,7 @@ class Archer(Entity, Thread):
         # print(f'I missed by this much: {miss}')
         # reward =  missToRewardFn(miss)
         # self.Reward(reward)
+
         return miss
 
     # def reward(self, ):
@@ -194,6 +202,9 @@ class Archer(Entity, Thread):
         for x in range(self.arrow_count):
             result = self.shoot(self.target)
             self.arrows_fired.append(result)
+        closest_shot = min(self.arrows_fired)
+        if closest_shot < self.miss:
+            self.miss = closest_shot
 
     def volley(self):
         self.run()
