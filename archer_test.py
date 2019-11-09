@@ -41,7 +41,7 @@ my_bow = MAX_BOW_STR
 do_it = True
 bad_guy = Entity(Vector(bad_guy_pos), screen)
 archer_pos = Vector(good_guy_pos)
-archer_population = ArcherPopulation(screen, archer_pos, num_archers=10, target=bad_guy)
+archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
 
 while do_it:
     screen.fill(black)
