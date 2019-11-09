@@ -41,7 +41,7 @@ class ArcherBrain(tf.keras.Model):
 
 
 class Archer(Entity, Thread):
-    def __init__(self, position, screen, target, bow_str=MAX_BOW_STR, arrow_count=10, brain=None):
+    def __init__(self, position, screen, target, bow_str=MAX_BOW_STR, arrow_count=1, brain=None):
         """
 
         Args:
@@ -163,7 +163,7 @@ class Archer(Entity, Thread):
 
         # print(arrow_vector)
 
-        import random
+
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         start_pos = self.position
         # print(f'self.postion:{self.position}')
@@ -181,6 +181,11 @@ class Archer(Entity, Thread):
 
             if new_pos.y >= self.screen.get_height():
                 break
+
+            if new_pos.x >= self.target.position.x:
+                break
+            # if new_pos.y >= self.target.position.y:
+            #     break
 
             pygame.draw.line(self.screen, color, last_pos.float_list, new_pos.float_list)
             last_pos = new_pos.copy()

@@ -12,6 +12,8 @@ from classes.archer import Archer, ArcherBrain, MAX_BOW_STR
 from classes.archer_population import ArcherPopulation
 from classes.entity import Entity
 from vector import Vector
+import random
+import time
 # import random
 # import numpy
 # from profile_utils import cprofileContext
@@ -41,13 +43,14 @@ my_bow = MAX_BOW_STR
 do_it = True
 bad_guy = Entity(Vector(bad_guy_pos), screen)
 archer_pos = Vector(good_guy_pos)
-archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
+archer_population = ArcherPopulation(screen, archer_pos, num_archers=10, target=bad_guy)
 
 while do_it:
     screen.fill(black)
     # print(type(screen))
     # print(dir(screen))
-
+    # bad_guy.position.x = random.randrange(int(screen.get_width()*.75), screen.get_width())
+    # bad_guy.position.y = random.randrange(screen.get_height() / 2, screen.get_height())
     # my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
 
     # new_archer = Archer(good_guy_pos, screen, size, bad_guy, bow_str=my_bow)
@@ -67,6 +70,7 @@ while do_it:
     # new_archer.shoot(bad_guy)
 
     # screen.blit(my_cool_new_circle)
+    time.sleep(.25)
     pygame.display.flip()
 
     # do_it = False
