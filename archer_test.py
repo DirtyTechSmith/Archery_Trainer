@@ -39,13 +39,16 @@ bad_guy_pos = [size[0] - radius, size[1] - radius]
 
 my_bow = MAX_BOW_STR
 do_it = True
+bad_guy = Entity(Vector(bad_guy_pos), screen)
+archer_pos = Vector(good_guy_pos)
+archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
+
 while do_it:
     # print(type(screen))
     # print(dir(screen))
-    bad_guy = Entity(Vector(bad_guy_pos), screen)
-    archer_pos = Vector(good_guy_pos)
+
     # my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
-    archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
+
     # new_archer = Archer(good_guy_pos, screen, size, bad_guy, bow_str=my_bow)
 
     focus = pygame.key.get_focused()

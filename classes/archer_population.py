@@ -65,4 +65,11 @@ class ArcherPopulation(object):
         closest_hit = min(the_misses)
         print(f'biggest miss: {biggest_miss}, closest hit: {closest_hit}')
         for archer in self.archers.values():
-            pass
+            if miss == 0:
+                archer.fitness = 1.0
+                print('WE GOT A STRONK BOI')
+                continue
+
+            normalized_miss = miss / biggest_miss
+            fitness = 1.0 - normalized_miss
+            archer.fitness = fitness
