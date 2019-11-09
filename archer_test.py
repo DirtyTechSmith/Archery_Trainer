@@ -43,6 +43,7 @@ while do_it:
     print(dir(screen))
     bad_guy = Entity(bad_guy_pos, screen)
     archer_pos = Vector(good_guy_pos)
+    print(archer_pos.x)
     # my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
     archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
     # new_archer = Archer(good_guy_pos, screen, size, bad_guy, bow_str=my_bow)
