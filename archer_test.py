@@ -41,9 +41,10 @@ my_bow = MAX_BOW_STR
 do_it = True
 bad_guy = Entity(Vector(bad_guy_pos), screen)
 archer_pos = Vector(good_guy_pos)
-archer_population = ArcherPopulation(screen, archer_pos, num_archers=5, target=bad_guy)
+archer_population = ArcherPopulation(screen, archer_pos, num_archers=10, target=bad_guy)
 
 while do_it:
+    screen.fill(black)
     # print(type(screen))
     # print(dir(screen))
 
@@ -64,6 +65,7 @@ while do_it:
     archer_population.volley()
     archer_population.breedPopulation()
     # new_archer.shoot(bad_guy)
+
     # screen.blit(my_cool_new_circle)
     pygame.display.flip()
 

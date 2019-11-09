@@ -63,12 +63,14 @@ class ArcherPopulation(object):
             archer.volley_Threaded()
             archer.waitForFire()
 
-    def mutateLayer(self, layer, mutation_rate=1.5):
+    def mutateLayer(self, layer, mutation_rate=1.5, mut_min=-.01, mut_max=0.01):
         """
 
         Args:
             layer (Dense):
             mutation_rate(float):
+            mut_min(float):
+            mut_max(float):
         Returns:
             Dense:
         """
@@ -78,8 +80,8 @@ class ArcherPopulation(object):
             if mutation_check > mutation_rate:
                 continue
 
-            print('IMA MUTIN BRO')
-            mutate_amount = random.uniform(-0.1, 0.1)
+            # print('IMA MUTIN BRO')
+            mutate_amount = random.uniform(mut_min, mut_max)
             value.assign(value + mutate_amount)
             # if value > 1.0:
             #     value = 1.0
@@ -91,7 +93,7 @@ class ArcherPopulation(object):
 
         mutation_check = random.uniform(0.0, 100.0)
         if mutation_check <= mutation_rate:
-            mutate_amount = random.uniform(-0.1, 0.1)
+            mutate_amount = random.uniform(mut_min, mut_max)
             layer.bias.assign(layer.bias + mutate_amount)
 
         return layer
@@ -111,6 +113,47 @@ class ArcherPopulation(object):
             normalized_miss = archer.miss / biggest_miss
             fitness = 1.0 - normalized_miss
             archer.fitness = fitness
+
+        # ok now lets store off the weights and biases for chosing
+        num_archers = len(self.archers.keys())
+        # 0 is weighting, 1 is values
+        hidden_1_bias_weighting = [list(range(num_archers)), list(range(num_archers))]  # type: list[list]
+        hidden_2_bias_weighting = [list(range(num_archers)), list(range(num_archers))]  # type: list[list]
+        hidden_1 = []
+        hidden_2 = []
+
+        for archer_id, archer in self.archers.items():
+            hidden_1_bias_weighting[0][archer_id] = archer.fitness
+            hidden_1_bias_weighting[1][archer_id] = archer.brain.hidden_1.bias
+            hidden_2_bias_weighting[0][archer_id] = archer.fitness
+            hidden_2_bias_weighting[1][archer_id] = archer.brain.hidden_2.bias
+
+            for index, value in enumerate(archer.brain.hidden_1.weights):
+                hidden_1.append([list(range(num_archers)), list(range(num_archers))])
+            for index, value in enumerate(archer.brain.hidden_2.weights):
+                hidden_2.append([list(range(num_archers)), list(range(num_archers))])
+
+            for index, value in enumerate(archer.brain.hidden_1.weights):
+                hidden_1[index][0][archer_id] = archer.fitness
+                hidden_1[index][1][archer_id] = value
+
+            for index, value in enumerate(archer.brain.hidden_2.weights):
+                hidden_2[index][0][archer_id] = archer.fitness
+                hidden_2[index][1][archer_id] = value
+
+        for archer_id, archer in self.archers.items():
+            my_hidden_1_bias = random.choices(hidden_1_bias_weighting[1], weights=hidden_1_bias_weighting[0])[0]
+
+            # print(archer.brain.hidden_1.bias.shape)
+            # print(my_hidden_1_bias.shape)
+            archer.brain.hidden_1.bias.assign(my_hidden_1_bias)
+            my_hidden_2_bias = random.choices(hidden_2_bias_weighting[1], weights=hidden_2_bias_weighting[0])[0]
+            archer.brain.hidden_2.bias.assign(my_hidden_2_bias)
+            for index, weight in enumerate(archer.brain.hidden_1.weights):
+                chances = hidden_1[index][0]
+                values = hidden_1[index][1]
+                current_weights = random.choices(values, weights=chances)[0]
+                weight.assign(current_weights)
 
         # we determined fitness and breed, now for mutation
         for archer in self.archers.values():
