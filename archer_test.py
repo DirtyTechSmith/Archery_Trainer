@@ -14,6 +14,7 @@ from classes.entity import Entity
 from vector import Vector
 import random
 import time
+
 # import random
 # import numpy
 # from profile_utils import cprofileContext
@@ -43,14 +44,16 @@ my_bow = MAX_BOW_STR
 do_it = True
 bad_guy = Entity(Vector(bad_guy_pos), screen)
 archer_pos = Vector(good_guy_pos)
-archer_population = ArcherPopulation(screen, archer_pos, num_archers=10, target=bad_guy)
+archer_population = ArcherPopulation(screen, archer_pos, num_archers=25, target=bad_guy)
 
 while do_it:
     screen.fill(black)
     # print(type(screen))
     # print(dir(screen))
-    # bad_guy.position.x = random.randrange(int(screen.get_width()*.75), screen.get_width())
-    # bad_guy.position.y = random.randrange(screen.get_height() / 2, screen.get_height())
+    bad_guy.position.x = random.randrange(int(screen.get_width() * .75), screen.get_width())
+    # bad_guy.position.y = random.randrange(int(screen.get_height() * .75), screen.get_height())
+    # archer_pos.x = random.randrange(0, int(screen.get_width() * .25))
+    # archer_pos.y = random.randrange(int(screen.get_height() * .75), screen.get_height())
     # my_bow = random.uniform(MAX_BOW_STR * .5, MAX_BOW_STR * 1.5)
 
     # new_archer = Archer(good_guy_pos, screen, size, bad_guy, bow_str=my_bow)
@@ -63,7 +66,7 @@ while do_it:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: sys.exit()
 
-    archer_circle = pygame.draw.circle(screen, archer_color, good_guy_pos, radius)
+    archer_circle = pygame.draw.circle(screen, archer_color, (archer_pos.x, archer_pos.y), radius)
     bad_guy_circle = pygame.draw.circle(screen, bad_guy_color, bad_guy.position_tuple, radius)
     archer_population.volley()
     archer_population.breedPopulation()

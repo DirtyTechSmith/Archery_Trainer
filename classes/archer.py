@@ -10,18 +10,18 @@ from classes.entity import Entity
 from threading import Thread
 from collections import Iterable
 
-MAX_BOW_STR = 300.0
+MAX_BOW_STR = 275.0
 
 
 class ArcherBrain(tf.keras.Model):
     def compute_output_signature(self, input_signature):
         pass
 
-    def __init__(self):
+    def __init__(self, brain_cells=32):
         super().__init__()
         self.input_2d = tf.keras.layers.Dense(5, activation=tf.nn.sigmoid)
-        self.hidden_1 = tf.keras.layers.Dense(32, activation=tf.nn.relu)
-        self.hidden_2 = tf.keras.layers.Dense(32, activation=tf.nn.relu)
+        self.hidden_1 = tf.keras.layers.Dense(brain_cells, activation=tf.nn.relu)
+        self.hidden_2 = tf.keras.layers.Dense(brain_cells, activation=tf.nn.relu)
         self.output_2d = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
 
     def calculateTrajectory(self, inputs):
@@ -153,16 +153,17 @@ class Archer(Entity, Thread):
         the_list = [float(thing) for thing in results[0]]
         # print(f'bow pullback: {the_list[2]}')
         bow_pullback = the_list[2]
+        bow_pullback = abs(bow_pullback)
         arrow_speed = self.bow_str * bow_pullback
 
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
+        #arrow_vector = Vector([the_list[0], the_list[1]])
         arrow_vector.normalize()
         # print(arrow_vector)
 
         arrow_vector *= arrow_speed
 
         # print(arrow_vector)
-
 
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         start_pos = self.position
@@ -176,18 +177,22 @@ class Archer(Entity, Thread):
             # print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
             new_pos = last_pos + arrow_vector
+
+            draw_arrow = True
             if new_pos.x >= self.screen.get_width():
-                break
+                draw_arrow = False
+            # if new_pos.x >= self.target.position.x:
+            #     draw_arrow = False
 
             if new_pos.y >= self.screen.get_height():
                 break
 
-            if new_pos.x >= self.target.position.x:
-                break
             # if new_pos.y >= self.target.position.y:
             #     break
 
-            pygame.draw.line(self.screen, color, last_pos.float_list, new_pos.float_list)
+            if draw_arrow:
+                pygame.draw.line(self.screen, color, last_pos.float_list, new_pos.float_list)
+
             last_pos = new_pos.copy()
             arrow_vector += gravity
             # if counter > 10:

@@ -50,7 +50,7 @@ class ArcherPopulation(object):
 
         archer_dict = {}
         for x in range(num_archers):
-            archer_dict[x] = Archer(self.archer_position.copy(), self._screen, self.target)
+            archer_dict[x] = Archer(self.archer_position, self._screen, self.target)
 
         return archer_dict
 
