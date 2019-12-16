@@ -143,6 +143,7 @@ class Archer(Entity, Thread):
         """
         if enemy is None:
             enemy = self.target
+            
         enemy_position = enemy.position
 
         gravity = Vector([0.0, 9.8])
