@@ -55,16 +55,23 @@ class ArcherPopulation(object):
         return archer_dict
 
     def volley(self):
+        """Tell all archers to fire a volley
+
+        """
         for archer_number, archer in self.archers.items():
             archer.volley()
 
     def volleyThreaded(self):
+        """All the archers fire thier volleys in parallel
+        Dont remember if this works :P
+
+        """
         for archer_number, archer in self.archers.items():
             archer.volley_Threaded()
             archer.waitForFire()
 
     def mutateLayer(self, layer, mutation_rate=1.5, mut_min=-.05, mut_max=0.05):
-        """
+        """ To keep the population from being too stagnant lets add some mutation.
 
         Args:
             layer (Dense):
@@ -73,6 +80,7 @@ class ArcherPopulation(object):
             mut_max(float):
         Returns:
             Dense:
+
         """
         for index, value in enumerate(layer.weights):
 
@@ -99,7 +107,8 @@ class ArcherPopulation(object):
         return layer
 
     def pickGeneticMaterial(self, layer_name):
-        """
+        """from a given population, we rate everyone based on performance.
+        This performance metric is used to determine how likely we are to pick them as genetic material when breeding.
 
         Args:
             layer_name (str):
@@ -137,6 +146,12 @@ class ArcherPopulation(object):
                 weight.assign(current_weights)
 
     def breedPopulation(self):
+        """After a generation, lets breed all the archers.
+        Perfoformance is used to determine how likely new archers are to inhereit geens from the old archers.
+
+        Returns:
+
+        """
         the_misses = [archer.miss for archer in self.archers.values()]
         biggest_miss = max(the_misses)
         closest_hit = min(the_misses)
@@ -155,11 +170,15 @@ class ArcherPopulation(object):
             archer.fitness = fitness
 
         # ok now lets store off the weights and biases for chosing
-        for archer_id, archer in self.archers.items():
-            self.pickGeneticMaterial('input_2d')
-            self.pickGeneticMaterial('hidden_1')
-            self.pickGeneticMaterial('hidden_2')
-            self.pickGeneticMaterial('output_2d')
+        self.pickGeneticMaterial('input_2d')
+        self.pickGeneticMaterial('hidden_1')
+        self.pickGeneticMaterial('hidden_2')
+        self.pickGeneticMaterial('output_2d')
+        # for archer_id, archer in self.archers.items():
+        #     self.pickGeneticMaterial('input_2d')
+        #     self.pickGeneticMaterial('hidden_1')
+        #     self.pickGeneticMaterial('hidden_2')
+        #     self.pickGeneticMaterial('output_2d')
 
         # we determined fitness and breed, now for mutation
         for archer in self.archers.values():
