@@ -188,3 +188,8 @@ class ArcherPopulation(object):
             archer.brain.output_2d = self.mutateLayer(archer.brain.output_2d)
         # print('after')
         # print(self.archers[1].brain.hidden_1.weights)
+
+
+the_archers = ArcherPopulation()
+for archer_index, archer in the_archers.archers.items():
+    archer.
