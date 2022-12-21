@@ -23,7 +23,7 @@ class ArcherBrain(tf.keras.Model):
         self.hidden_2 = tf.keras.layers.Dense(brain_cells, activation=tf.nn.relu)
         self.output_2d = tf.keras.layers.Dense(3, activation=tf.nn.softmax)
 
-    def calculateTrajectory(self, inputs):
+    def calculate_trajectory(self, inputs):
         """
 
         Args:
@@ -105,12 +105,12 @@ class Archer(Entity, Thread):
             ArcherBrain:
         """
         if self._brain is None:
-            self._brain = self.createBrain()
+            self._brain = self.create_brain()
 
         return self._brain
 
     @staticmethod
-    def createBrain():
+    def create_brain():
         """
 
         Returns:
@@ -119,10 +119,15 @@ class Archer(Entity, Thread):
         the_brain = ArcherBrain()
         return the_brain
 
-    def resetMiss(self):
+    def reset_miss(self):
+        """ we want to reset the miss to an infinite miss
+
+        Returns:
+            float:
+        """
         self.miss = float('inf')
 
-    def calculate_relative_pos(self, pos):
+    def calculate_relative_position(self, pos):
         """
 
         Args:
@@ -150,7 +155,7 @@ class Archer(Entity, Thread):
 
         inputs = [self.position.x, self.position.y, self.target.position.x, self.target.position.y, self.bow_str]
         # print(inputs)
-        results = self.brain.calculateTrajectory(inputs)  # type: tf.Tensor
+        results = self.brain.calculate_trajectory(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
         # print(f'bow pullback: {the_list[2]}')
         bow_pullback = the_list[2]
