@@ -1,6 +1,6 @@
-from vector import Vector
-from collections import Iterable
 from pygame import Surface
+
+from vector import Vector
 
 
 class Entity(object):

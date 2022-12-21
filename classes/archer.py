@@ -1,14 +1,13 @@
-import math
-import tensorflow as tf
-import pygame
-from pygame import Surface
 import random
-from time import sleep
-from vector import Vector
+from threading import Thread
+
+import pygame
+import tensorflow as tf
+from pygame import Surface
+
 from classes.bow import Bow
 from classes.entity import Entity
-from threading import Thread
-from collections import Iterable
+from vector import Vector
 
 MAX_BOW_STR = 275.0
 
@@ -94,7 +93,8 @@ class Archer(Entity, Thread):
         Returns:
             list[float]:
         """
-        relative_pos = [float(self.position.x / self.screen.get_width()), float(self.position.y / self.screen.get_height())]
+        relative_pos = [float(self.position.x / self.screen.get_width()),
+                        float(self.position.y / self.screen.get_height())]
         return relative_pos
 
     @property
@@ -143,7 +143,7 @@ class Archer(Entity, Thread):
         """
         if enemy is None:
             enemy = self.target
-            
+
         enemy_position = enemy.position
 
         gravity = Vector([0.0, 9.8])
@@ -158,7 +158,7 @@ class Archer(Entity, Thread):
         arrow_speed = self.bow_str * bow_pullback
 
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
-        #arrow_vector = Vector([the_list[0], the_list[1]])
+        # arrow_vector = Vector([the_list[0], the_list[1]])
         arrow_vector.normalize()
         # print(arrow_vector)
 

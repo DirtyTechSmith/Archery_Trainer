@@ -1,9 +1,11 @@
+import random
+
+import tensorflow as tf
+from pygame import Surface
+
+from vector import Vector
 from .archer import Archer
 from .entity import Entity
-from pygame import Surface
-from vector import Vector
-import random
-import tensorflow as tf
 
 Dense = tf.keras.layers.Dense
 
@@ -32,15 +34,15 @@ class ArcherPopulation(object):
             dict[int,Archer]:
         """
         if self._archers is None:
-            self._archers = self.makeArchers(num_archers=self.archer_count)
+            self._archers = self.make_archers(num_archers=self.archer_count)
 
         return self._archers
 
-    def makeArchers(self, num_archers=None):
+    def make_archers(self, num_archers=None):
         """
 
         Args:
-            num_archers (int):
+            num_archers (int):a
 
         Returns:
             dict[int,Archer]:
@@ -61,7 +63,7 @@ class ArcherPopulation(object):
         for archer_number, archer in self.archers.items():
             archer.volley()
 
-    def volleyThreaded(self):
+    def volley_threaded(self):
         """All the archers fire thier volleys in parallel
         Dont remember if this works :P
 
@@ -70,7 +72,7 @@ class ArcherPopulation(object):
             archer.volley_Threaded()
             archer.waitForFire()
 
-    def mutateLayer(self, layer, mutation_rate=1.5, mut_min=-.05, mut_max=0.05):
+    def mutate_layer(self, layer, mutation_rate=1.5, mut_min=-.05, mut_max=0.05):
         """ To keep the population from being too stagnant lets add some mutation.
 
         Args:
@@ -88,14 +90,8 @@ class ArcherPopulation(object):
             if mutation_check > mutation_rate:
                 continue
 
-            # print('IMA MUTIN BRO')
             mutate_amount = random.uniform(mut_min, mut_max)
             value.assign(value + mutate_amount)
-            # if value > 1.0:
-            #     value = 1.0
-            #
-            # elif value < -1.0:
-            #     value = -1.0
 
             layer.weights[index] = value
 
@@ -106,14 +102,12 @@ class ArcherPopulation(object):
 
         return layer
 
-    def pickGeneticMaterial(self, layer_name):
+    def pick_genetic_material(self, layer_name):
         """from a given population, we rate everyone based on performance.
         This performance metric is used to determine how likely we are to pick them as genetic material when breeding.
 
         Args:
             layer_name (str):
-
-        Returns:
 
         """
         num_archers = len(self.archers.keys())
@@ -145,20 +139,15 @@ class ArcherPopulation(object):
                 current_weights = random.choices(values, weights=chances)[0]
                 weight.assign(current_weights)
 
-    def breedPopulation(self):
+    def breed_population(self):
         """After a generation, lets breed all the archers.
-        Perfoformance is used to determine how likely new archers are to inhereit geens from the old archers.
-
-        Returns:
+        Performance is used to determine how likely new archers are to inherit genes from the old archers.
 
         """
         the_misses = [archer.miss for archer in self.archers.values()]
         biggest_miss = max(the_misses)
         closest_hit = min(the_misses)
-        # print(f'biggest miss: {biggest_miss}, closest hit: {closest_hit}')
-        # lets determine our fitness
-        # print('before')
-        # print(self.archers[1].brain.hidden_1.weights)
+
         for archer in self.archers.values():
             if archer.miss == 0:
                 archer.fitness = 1.0
@@ -170,26 +159,19 @@ class ArcherPopulation(object):
             archer.fitness = fitness
 
         # ok now lets store off the weights and biases for chosing
-        self.pickGeneticMaterial('input_2d')
-        self.pickGeneticMaterial('hidden_1')
-        self.pickGeneticMaterial('hidden_2')
-        self.pickGeneticMaterial('output_2d')
-        # for archer_id, archer in self.archers.items():
-        #     self.pickGeneticMaterial('input_2d')
-        #     self.pickGeneticMaterial('hidden_1')
-        #     self.pickGeneticMaterial('hidden_2')
-        #     self.pickGeneticMaterial('output_2d')
+        self.pick_genetic_material('input_2d')
+        self.pick_genetic_material('hidden_1')
+        self.pick_genetic_material('hidden_2')
+        self.pick_genetic_material('output_2d')
 
         # we determined fitness and breed, now for mutation
         for archer in self.archers.values():
-            archer.brain.hidden_1 = self.mutateLayer(archer.brain.hidden_1)
-            archer.brain.hidden_2 = self.mutateLayer(archer.brain.hidden_2)
-            archer.brain.input_2d = self.mutateLayer(archer.brain.input_2d)
-            archer.brain.output_2d = self.mutateLayer(archer.brain.output_2d)
-        # print('after')
-        # print(self.archers[1].brain.hidden_1.weights)
+            archer.brain.hidden_1 = self.mutate_layer(archer.brain.hidden_1)
+            archer.brain.hidden_2 = self.mutate_layer(archer.brain.hidden_2)
+            archer.brain.input_2d = self.mutate_layer(archer.brain.input_2d)
+            archer.brain.output_2d = self.mutate_layer(archer.brain.output_2d)
 
 
-the_archers = ArcherPopulation()
-for archer_index, archer in the_archers.archers.items():
-    archer.
+
+if __name__ == '__main__':
+    the_archers = ArcherPopulation()

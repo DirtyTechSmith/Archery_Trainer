@@ -5,15 +5,17 @@ https://arxiv.org/ftp/arxiv/papers/1511/1511.02250.pdf
 3d physics engine https://pybullet.org/
 """
 
+import random
 import sys
+import time
+
 import pygame
 from pygame import Surface
-from classes.archer import Archer, ArcherBrain, MAX_BOW_STR
+
+from classes.archer import MAX_BOW_STR
 from classes.archer_population import ArcherPopulation
 from classes.entity import Entity
 from vector import Vector
-import random
-import time
 
 # import random
 # import numpy
@@ -69,7 +71,7 @@ while do_it:
     archer_circle = pygame.draw.circle(screen, archer_color, (archer_pos.x, archer_pos.y), radius)
     bad_guy_circle = pygame.draw.circle(screen, bad_guy_color, bad_guy.position_tuple, radius)
     archer_population.volley()
-    archer_population.breedPopulation()
+    archer_population.breed_population()
     # new_archer.shoot(bad_guy)
 
     # screen.blit(my_cool_new_circle)
