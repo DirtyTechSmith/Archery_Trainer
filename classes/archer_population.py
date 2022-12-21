@@ -3,7 +3,7 @@ import random
 import tensorflow as tf
 from pygame import Surface
 
-from archer import Archer
+from classes.archer import Archer
 from archer_log import log
 from entity import Entity
 from vector import Vector

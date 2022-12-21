@@ -1,5 +1,5 @@
 from vector import Vector
-from arrow import Arrow
+from classes.arrow import Arrow
 
 LBS_TO_NEWTONS = 4.4482216282509
 INCHES_TO_METERS = 0.0254

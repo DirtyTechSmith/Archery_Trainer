@@ -32,13 +32,13 @@ while 1:
         last_pressed_keys = pressed_keys
         if pressed_keys[space_bar]:
             print('spacetime')
-            # speed[0] = -speed[0]
+            # SPEED[0] = -SPEED[0]
 
-    # image_rect = image_rect.move(speed)
+    # image_rect = image_rect.move(SPEED)
     # if image_rect.left < 0 or image_rect.right > width:
-    #     speed[0] = -speed[0]
+    #     SPEED[0] = -SPEED[0]
     # if image_rect.top < 0 or image_rect.bottom > height:
-    #     speed[1] = -speed[1]
+    #     SPEED[1] = -SPEED[1]
     screen.fill(black)
     # screen.blit(pygame_image, image_rect)
     pygame.display.flip()

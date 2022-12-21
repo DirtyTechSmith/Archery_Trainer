@@ -1,2 +1,4 @@
 pygame
 tensorflow-gpu>=2.0.0
+gym
+Pillow
