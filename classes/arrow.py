@@ -1,5 +1,4 @@
 from vector import Vector
-import numpy as np
 
 GRAVITY = 9.8
 
@@ -192,6 +191,7 @@ class Arrow(object):
 
 
 if __name__ == '__main__':
+    from archer_log import log
     new_arrow = Arrow(Vector([0.0, 0.0]))
     new_arrow.grains = 300
-    print(f'grains: {new_arrow.grains}, grams: {new_arrow.mass_grams}, kg : {new_arrow.mass}')
+    log.info(f'grains: {new_arrow.grains}, grams: {new_arrow.mass_grams}, kg : {new_arrow.mass}')

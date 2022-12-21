@@ -3,9 +3,10 @@ import random
 import tensorflow as tf
 from pygame import Surface
 
+from archer import Archer
+from archer_log import log
+from entity import Entity
 from vector import Vector
-from .archer import Archer
-from .entity import Entity
 
 Dense = tf.keras.layers.Dense
 
@@ -69,8 +70,8 @@ class ArcherPopulation(object):
 
         """
         for archer_number, archer in self.archers.items():
-            archer.volley_Threaded()
-            archer.waitForFire()
+            archer.volley_threaded()
+            archer.wait_for_fire()
 
     def mutate_layer(self, layer, mutation_rate=1.5, mut_min=-.05, mut_max=0.05):
         """ To keep the population from being too stagnant lets add some mutation.
@@ -151,7 +152,7 @@ class ArcherPopulation(object):
         for archer in self.archers.values():
             if archer.miss == 0:
                 archer.fitness = 1.0
-                print('WE GOT A STRONK BOI')
+                log.info('WE GOT A STRONK BOI')
                 continue
 
             normalized_miss = archer.miss / biggest_miss
@@ -170,7 +171,6 @@ class ArcherPopulation(object):
             archer.brain.hidden_2 = self.mutate_layer(archer.brain.hidden_2)
             archer.brain.input_2d = self.mutate_layer(archer.brain.input_2d)
             archer.brain.output_2d = self.mutate_layer(archer.brain.output_2d)
-
 
 
 if __name__ == '__main__':

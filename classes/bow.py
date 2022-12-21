@@ -1,13 +1,13 @@
-from .arrow import Arrow
 from vector import Vector
-import numpy
+from arrow import Arrow
 
 LBS_TO_NEWTONS = 4.4482216282509
 INCHES_TO_METERS = 0.0254
 
 
 class Bow(object):
-    def __init__(self, archer=None, arrow_velocity=60.0, draw_weight_lbs=100.0, draw_length=0.75, efficiency=1.0, arrow_type=None):
+    def __init__(self, archer=None, arrow_velocity=60.0, draw_weight_lbs=100.0, draw_length=0.75, efficiency=1.0,
+                 arrow_type=None):
         """
 
         Args:
@@ -101,7 +101,7 @@ class Bow(object):
         """
         return self._efficiency
 
-    def shootArrow(self, vector, pull_percent, target_position):
+    def shoot_arrow(self, vector, pull_percent, target_position):
         """
 
         Args:

@@ -154,10 +154,9 @@ class Archer(Entity, Thread):
         gravity = Vector([0.0, 9.8])
 
         inputs = [self.position.x, self.position.y, self.target.position.x, self.target.position.y, self.bow_str]
-        # print(inputs)
+
         results = self.brain.calculate_trajectory(inputs)  # type: tf.Tensor
         the_list = [float(thing) for thing in results[0]]
-        # print(f'bow pullback: {the_list[2]}')
         bow_pullback = the_list[2]
         bow_pullback = abs(bow_pullback)
         arrow_speed = self.bow_str * bow_pullback
@@ -165,22 +164,15 @@ class Archer(Entity, Thread):
         arrow_vector = Vector([the_list[0], (0.0 - the_list[1])])
         # arrow_vector = Vector([the_list[0], the_list[1]])
         arrow_vector.normalize()
-        # print(arrow_vector)
 
         arrow_vector *= arrow_speed
 
-        # print(arrow_vector)
-
         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         start_pos = self.position
-        # print(f'self.postion:{self.position}')
         last_pos = self.position.copy()
         counter = 0
-        # print(f'last pos:{last_pos}')
 
         while last_pos.y <= self.screen.get_height():
-
-            # print(f'arrow height: {self.screen_size.y - last_pos.y}')
             # sleep(.1)
             new_pos = last_pos + arrow_vector
 
@@ -201,9 +193,7 @@ class Archer(Entity, Thread):
 
             last_pos = new_pos.copy()
             arrow_vector += gravity
-            # if counter > 10:
-            #     break
-            # counter += 1
+
         # end_pos = Vector.sum(start_pos, arrow_vector)
         miss = Vector.distance(last_pos, enemy_position)
         # print(f'I missed by this much: {miss}')
@@ -218,6 +208,7 @@ class Archer(Entity, Thread):
         for x in range(self.arrow_count):
             result = self.shoot(self.target)
             self.arrows_fired.append(result)
+
         closest_shot = min(self.arrows_fired)
         if closest_shot < self.miss:
             self.miss = closest_shot
@@ -225,8 +216,8 @@ class Archer(Entity, Thread):
     def volley(self):
         self.run()
 
-    def volley_Threaded(self):
+    def volley_threaded(self):
         self.start()
 
-    def waitForFire(self):
+    def wait_for_fire(self):
         self.join()

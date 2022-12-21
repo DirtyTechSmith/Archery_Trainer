@@ -17,10 +17,6 @@ from classes.archer_population import ArcherPopulation
 from classes.entity import Entity
 from vector import Vector
 
-# import random
-# import numpy
-# from profile_utils import cprofileContext
-
 pygame.init()
 draw = pygame.draw
 
@@ -80,10 +76,4 @@ while do_it:
 
     # do_it = False
 
-# pressed_keys = pygame.key.get_pressed()
-#     if pressed_keys != last_pressed_keys:
-#         # print('keys changed')
-#         last_pressed_keys = pressed_keys
-#         if pressed_keys[pygame.K_SPACE]:
-#             new_archer.shoot(bad_guy)
-#             print('spacetime')
+pygame.quit()
