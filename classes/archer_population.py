@@ -5,7 +5,7 @@ from pygame import Surface
 
 from classes.archer import Archer
 from archer_log import log
-from entity import Entity
+from classes.entity import Entity
 from vector import Vector
 
 Dense = tf.keras.layers.Dense
